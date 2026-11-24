@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "ram": {"label":"Memoria RAM","options":["2 GB","4 GB","8 GB","12 GB","16 GB","24 GB","32 GB","64 GB","128 GB"]},
+    "storage": {"label":"Almacenamiento","options":["32 GB","64 GB","128 GB","256 GB","512 GB","1 TB","2 TB","4 TB","8 TB"]},
+    "storage_type": {"label":"Tipo de almacenamiento","options":["SSD NVMe","SSD SATA","HDD","eMMC","Flash"]},
+    "processor": {"label":"Procesador","options":["Intel Core i3","Intel Core i5","Intel Core i7","Intel Core i9","Intel Celeron","AMD Ryzen 3","AMD Ryzen 5","AMD Ryzen 7","AMD Ryzen 9","Apple M1","Apple M2","Apple M3","Apple M4","ARM"]},
+    "screen": {"label":"Pantalla","options":["8 pulgadas","10 pulgadas","11 pulgadas","13 pulgadas","14 pulgadas","15.6 pulgadas","16 pulgadas","17 pulgadas","21.5 pulgadas","24 pulgadas","27 pulgadas","32 pulgadas"]},
+    "resolution": {"label":"Resolución","options":["HD","Full HD","QHD","4K","Retina"]},
+    "connectivity": {"label":"Conectividad","options":["Wi-Fi","Wi-Fi 6","Wi-Fi 6E","Wi-Fi 7","Bluetooth","Wi-Fi y Bluetooth","Ethernet","USB","USB-C","HDMI","Inalámbrico 2.4 GHz"]},
+    "interface": {"label":"Interfaz","options":["USB","USB-C","HDMI","DisplayPort","SATA","M.2 NVMe","PCIe","DDR3","DDR4","DDR5","Jack 3.5 mm"]},
+    "power": {"label":"Potencia","options":["5 W","10 W","20 W","30 W","45 W","65 W","90 W","120 W","250 W","450 W","650 W","850 W"]},
+    "capacity": {"label":"Capacidad de batería","options":["2000 mAh","3000 mAh","4000 mAh","5000 mAh","10000 mAh","20000 mAh","40 Wh","50 Wh","60 Wh","80 Wh"]}
+  },
+  "profiles": {
+    "Computadoras":["ram","storage","storage_type","processor","screen","resolution","connectivity"],
+    "Tablets":["ram","storage","processor","screen","resolution","connectivity","capacity"],
+    "Monitores":["screen","resolution","connectivity","interface"],
+    "Audio":["connectivity","interface","power","capacity"],
+    "Periféricos":["connectivity","interface","power"],
+    "Redes":["connectivity","interface","power"],
+    "Componentes":["ram","storage","storage_type","interface","power"],
+    "Batería":["capacity","power","interface"],
+    "General":["ram","storage","storage_type","processor","screen","resolution","connectivity","interface","power","capacity"]
+  }
+}

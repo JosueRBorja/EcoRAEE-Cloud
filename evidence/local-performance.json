@@ -1,0 +1,31 @@
+{
+  "timestamp_utc": "2026-11-19T21:53:17.139704+00:00",
+  "python": "3.14.4",
+  "conditions": "TestClient ASGI, secuencial, calentamiento previo, SQLite temporal, datos sint\u00e9ticos. No mide red ni AWS.",
+  "results": {
+    "/api/catalog": {
+      "requests": 100,
+      "median_ms": 3.496,
+      "p95_ms": 4.436,
+      "error_rate": 0.0,
+      "target_p95_ms": 250,
+      "target_met": true
+    },
+    "/api/network": {
+      "requests": 100,
+      "median_ms": 4.798,
+      "p95_ms": 5.766,
+      "error_rate": 0.0,
+      "target_p95_ms": 250,
+      "target_met": true
+    },
+    "/api/circular-metrics": {
+      "requests": 100,
+      "median_ms": 4.729,
+      "p95_ms": 5.645,
+      "error_rate": 0.0,
+      "target_p95_ms": 250,
+      "target_met": true
+    }
+  }
+}

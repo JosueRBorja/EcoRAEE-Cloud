@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AWStoreDefinitions" targetNamespace="https://awstore.local/process">
+  <bpmn:process id="CircularProcess" name="Recepción y trazabilidad AWStore" isExecutable="false">
+    <bpmn:startEvent id="Start" name="Equipo recibido"><bpmn:outgoing>f1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:userTask id="Receive" name="Ventas registra equipo o lote"><bpmn:incoming>f1</bpmn:incoming><bpmn:outgoing>f2</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="Evaluate" name="Técnico evalúa y clasifica"><bpmn:incoming>f2</bpmn:incoming><bpmn:outgoing>f3</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="Plan" name="Inventario analiza capacidad y reserva"><bpmn:incoming>f3</bpmn:incoming><bpmn:outgoing>f4</bpmn:outgoing></bpmn:userTask>
+    <bpmn:exclusiveGateway id="Evidence" name="¿Evidencias completas?" default="f6"><bpmn:incoming>f4</bpmn:incoming><bpmn:incoming>f7</bpmn:incoming><bpmn:outgoing>f5</bpmn:outgoing><bpmn:outgoing>f6</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:userTask id="Attach" name="Personal adjunta evidencias"><bpmn:incoming>f6</bpmn:incoming><bpmn:outgoing>f7</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="Confirm" name="Inventario confirma recepción"><bpmn:incoming>f5</bpmn:incoming><bpmn:outgoing>f8</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="Close" name="Inventario confirma destinos compatibles"><bpmn:incoming>f8</bpmn:incoming><bpmn:outgoing>f9</bpmn:outgoing></bpmn:userTask>
+    <bpmn:endEvent id="End" name="Expediente cerrado"><bpmn:incoming>f9</bpmn:incoming></bpmn:endEvent>
+    <bpmn:sequenceFlow id="f1" sourceRef="Start" targetRef="Receive"/>
+    <bpmn:sequenceFlow id="f2" sourceRef="Receive" targetRef="Evaluate"/>
+    <bpmn:sequenceFlow id="f3" sourceRef="Evaluate" targetRef="Plan"/>
+    <bpmn:sequenceFlow id="f4" sourceRef="Plan" targetRef="Evidence"/>
+    <bpmn:sequenceFlow id="f5" name="Sí" sourceRef="Evidence" targetRef="Confirm"/>
+    <bpmn:sequenceFlow id="f6" name="No" sourceRef="Evidence" targetRef="Attach"/>
+    <bpmn:sequenceFlow id="f7" sourceRef="Attach" targetRef="Evidence"/>
+    <bpmn:sequenceFlow id="f8" sourceRef="Confirm" targetRef="Close"/>
+    <bpmn:sequenceFlow id="f9" sourceRef="Close" targetRef="End"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram"><bpmndi:BPMNPlane id="Plane" bpmnElement="CircularProcess">
+    <bpmndi:BPMNShape id="sStart" bpmnElement="Start"><dc:Bounds x="30" y="102" width="36" height="36"/></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="sReceive" bpmnElement="Receive"><dc:Bounds x="110" y="80" width="140" height="80"/></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="sEvaluate" bpmnElement="Evaluate"><dc:Bounds x="300" y="80" width="140" height="80"/></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="sPlan" bpmnElement="Plan"><dc:Bounds x="490" y="80" width="140" height="80"/></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="sEvidence" bpmnElement="Evidence" isMarkerVisible="true"><dc:Bounds x="680" y="95" width="50" height="50"/></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="sAttach" bpmnElement="Attach"><dc:Bounds x="635" y="240" width="140" height="80"/></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="sConfirm" bpmnElement="Confirm"><dc:Bounds x="800" y="80" width="140" height="80"/></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="sClose" bpmnElement="Close"><dc:Bounds x="990" y="80" width="140" height="80"/></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="sEnd" bpmnElement="End"><dc:Bounds x="1180" y="102" width="36" height="36"/></bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="df1" bpmnElement="f1"><di:waypoint x="66" y="120"/><di:waypoint x="110" y="120"/></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="df2" bpmnElement="f2"><di:waypoint x="250" y="120"/><di:waypoint x="300" y="120"/></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="df3" bpmnElement="f3"><di:waypoint x="440" y="120"/><di:waypoint x="490" y="120"/></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="df4" bpmnElement="f4"><di:waypoint x="630" y="120"/><di:waypoint x="680" y="120"/></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="df5" bpmnElement="f5"><di:waypoint x="730" y="120"/><di:waypoint x="800" y="120"/></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="df6" bpmnElement="f6"><di:waypoint x="705" y="145"/><di:waypoint x="705" y="240"/></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="df7" bpmnElement="f7"><di:waypoint x="775" y="280"/><di:waypoint x="780" y="280"/><di:waypoint x="780" y="40"/><di:waypoint x="705" y="40"/><di:waypoint x="705" y="95"/></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="df8" bpmnElement="f8"><di:waypoint x="940" y="120"/><di:waypoint x="990" y="120"/></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="df9" bpmnElement="f9"><di:waypoint x="1130" y="120"/><di:waypoint x="1180" y="120"/></bpmndi:BPMNEdge>
+  </bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</bpmn:definitions>

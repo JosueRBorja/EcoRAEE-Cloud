@@ -1,0 +1,3 @@
+-r requirements-lock.txt
+boto3>=1.40,<2
+psycopg[binary]>=3.2,<4

@@ -1,0 +1,179 @@
+[
+  {
+    "factor": 1,
+    "max_flow": 5,
+    "cut_capacity": 5,
+    "min_cut_edges": [
+      1,
+      2
+    ],
+    "source_partition": [
+      1
+    ],
+    "sink_partition": [
+      2,
+      3,
+      4
+    ],
+    "edges": [
+      {
+        "id": 1,
+        "source_id": 1,
+        "target_id": 2,
+        "capacity": 3,
+        "flow": 3,
+        "saturated": true
+      },
+      {
+        "id": 2,
+        "source_id": 1,
+        "target_id": 3,
+        "capacity": 2,
+        "flow": 2,
+        "saturated": true
+      },
+      {
+        "id": 3,
+        "source_id": 2,
+        "target_id": 3,
+        "capacity": 1,
+        "flow": 1,
+        "saturated": true
+      },
+      {
+        "id": 4,
+        "source_id": 2,
+        "target_id": 4,
+        "capacity": 2,
+        "flow": 2,
+        "saturated": true
+      },
+      {
+        "id": 5,
+        "source_id": 3,
+        "target_id": 4,
+        "capacity": 3,
+        "flow": 3,
+        "saturated": true
+      }
+    ]
+  },
+  {
+    "factor": 2,
+    "max_flow": 10,
+    "cut_capacity": 10,
+    "min_cut_edges": [
+      1,
+      2
+    ],
+    "source_partition": [
+      1
+    ],
+    "sink_partition": [
+      2,
+      3,
+      4
+    ],
+    "edges": [
+      {
+        "id": 1,
+        "source_id": 1,
+        "target_id": 2,
+        "capacity": 6,
+        "flow": 6,
+        "saturated": true
+      },
+      {
+        "id": 2,
+        "source_id": 1,
+        "target_id": 3,
+        "capacity": 4,
+        "flow": 4,
+        "saturated": true
+      },
+      {
+        "id": 3,
+        "source_id": 2,
+        "target_id": 3,
+        "capacity": 2,
+        "flow": 2,
+        "saturated": true
+      },
+      {
+        "id": 4,
+        "source_id": 2,
+        "target_id": 4,
+        "capacity": 4,
+        "flow": 4,
+        "saturated": true
+      },
+      {
+        "id": 5,
+        "source_id": 3,
+        "target_id": 4,
+        "capacity": 6,
+        "flow": 6,
+        "saturated": true
+      }
+    ]
+  },
+  {
+    "factor": 3,
+    "max_flow": 15,
+    "cut_capacity": 15,
+    "min_cut_edges": [
+      1,
+      2
+    ],
+    "source_partition": [
+      1
+    ],
+    "sink_partition": [
+      2,
+      3,
+      4
+    ],
+    "edges": [
+      {
+        "id": 1,
+        "source_id": 1,
+        "target_id": 2,
+        "capacity": 9,
+        "flow": 9,
+        "saturated": true
+      },
+      {
+        "id": 2,
+        "source_id": 1,
+        "target_id": 3,
+        "capacity": 6,
+        "flow": 6,
+        "saturated": true
+      },
+      {
+        "id": 3,
+        "source_id": 2,
+        "target_id": 3,
+        "capacity": 3,
+        "flow": 3,
+        "saturated": true
+      },
+      {
+        "id": 4,
+        "source_id": 2,
+        "target_id": 4,
+        "capacity": 6,
+        "flow": 6,
+        "saturated": true
+      },
+      {
+        "id": 5,
+        "source_id": 3,
+        "target_id": 4,
+        "capacity": 9,
+        "flow": 9,
+        "saturated": true
+      }
+    ]
+  }
+]

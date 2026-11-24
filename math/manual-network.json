@@ -1,0 +1,14 @@
+{
+  "description": "Red pequeña comprobable a mano: el corte {s} tiene capacidad 3+2=5.",
+  "nodes": [{"id":1,"name":"s"},{"id":2,"name":"a"},{"id":3,"name":"b"},{"id":4,"name":"t"}],
+  "source": 1,
+  "sink": 4,
+  "edges": [
+    {"id":1,"source_id":1,"target_id":2,"capacity":3},
+    {"id":2,"source_id":1,"target_id":3,"capacity":2},
+    {"id":3,"source_id":2,"target_id":3,"capacity":1},
+    {"id":4,"source_id":2,"target_id":4,"capacity":2},
+    {"id":5,"source_id":3,"target_id":4,"capacity":3}
+  ],
+  "expected_max_flow": 5
+}

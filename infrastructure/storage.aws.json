@@ -1,0 +1,292 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "EcoRAEE private application storage and EC2 evidence access",
+  "Resources": {
+    "Frontend": {
+      "Type": "AWS::S3::Bucket",
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain",
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        },
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced"
+            }
+          ]
+        }
+      }
+    },
+    "Evidence": {
+      "Type": "AWS::S3::Bucket",
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain",
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        },
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced"
+            }
+          ]
+        }
+      }
+    },
+    "EvidenceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "EvidenceObjects",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:PutObject",
+                    "s3:DeleteObject"
+                  ],
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        {
+                          "Fn::GetAtt": [
+                            "Evidence",
+                            "Arn"
+                          ]
+                        },
+                        "/evidence/*"
+                      ]
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "EvidenceInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "EvidenceRole"
+          }
+        ]
+      }
+    },
+    "FrontendTlsPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "Frontend"
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:*",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "Frontend",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "Frontend",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false"
+                }
+              }
+            },
+            {
+              "Fn::If": [
+                "HasFrontendDistribution",
+                {
+                  "Effect": "Allow",
+                  "Principal": {
+                    "Service": "cloudfront.amazonaws.com"
+                  },
+                  "Action": "s3:GetObject",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        {
+                          "Fn::GetAtt": [
+                            "Frontend",
+                            "Arn"
+                          ]
+                        },
+                        "/site/*"
+                      ]
+                    ]
+                  },
+                  "Condition": {
+                    "StringEquals": {
+                      "AWS:SourceArn": {
+                        "Fn::Sub": "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${FrontendDistributionId}"
+                      }
+                    }
+                  }
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "EvidenceTlsPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "Evidence"
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:*",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "Evidence",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "Evidence",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "FrontendBucket": {
+      "Value": {
+        "Ref": "Frontend"
+      }
+    },
+    "EvidenceBucket": {
+      "Value": {
+        "Ref": "Evidence"
+      }
+    },
+    "InstanceProfile": {
+      "Value": {
+        "Ref": "EvidenceInstanceProfile"
+      }
+    }
+  },
+  "Parameters": {
+    "FrontendDistributionId": {
+      "Type": "String",
+      "Default": ""
+    }
+  },
+  "Conditions": {
+    "HasFrontendDistribution": {
+      "Fn::Not": [
+        {
+          "Fn::Equals": [
+            {
+              "Ref": "FrontendDistributionId"
+            },
+            ""
+          ]
+        }
+      ]
+    }
+  }
+}

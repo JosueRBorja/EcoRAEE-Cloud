@@ -1,0 +1,23 @@
+{
+  "conditions": {
+    "rows": 50000,
+    "queries_per_scenario": 40,
+    "storage": "SQLite en memoria; datos sint\u00e9ticos",
+    "python": "3.14.4",
+    "sqlite": "3.50.4"
+  },
+  "before": {
+    "median_ms": 0.8881,
+    "p95_ms": 0.9861,
+    "plan": [
+      "SCAN events"
+    ]
+  },
+  "after": {
+    "median_ms": 0.0315,
+    "p95_ms": 0.038,
+    "plan": [
+      "SEARCH events USING INDEX idx_events_device (device_id=?)"
+    ]
+  }
+}

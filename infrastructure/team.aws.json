@@ -1,0 +1,109 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Temporary EcoRAEE project IAM identities",
+  "Resources": {
+    "DeployGroup": {
+      "Type": "AWS::IAM::Group",
+      "Properties": {
+        "Path": "/ecoraee-demo/"
+      }
+    },
+    "ReviewGroup": {
+      "Type": "AWS::IAM::Group",
+      "Properties": {
+        "Path": "/ecoraee-demo/"
+      }
+    },
+    "DeployUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Path": "/ecoraee-demo/",
+        "Groups": [
+          {
+            "Ref": "DeployGroup"
+          }
+        ]
+      }
+    },
+    "ReviewUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Path": "/ecoraee-demo/",
+        "Groups": [
+          {
+            "Ref": "ReviewGroup"
+          }
+        ]
+      }
+    },
+    "ReviewPolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "Description": "Read the three EcoRAEE CloudFormation stacks",
+        "Groups": [
+          {
+            "Ref": "ReviewGroup"
+          },
+          {
+            "Ref": "DeployGroup"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cloudformation:DescribeStacks",
+                "cloudformation:ListStackResources",
+                "cloudformation:DescribeStackEvents"
+              ],
+              "Resource": {
+                "Fn::Sub": "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/ecoraee-*/*"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "DeployPolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "Description": "Publish the EcoRAEE site and deployment artifacts",
+        "Groups": [
+          {
+            "Ref": "DeployGroup"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetObject",
+                "s3:PutObject"
+              ],
+              "Resource": [
+                "arn:aws:s3:::ecoraee-storage-frontend-xzgeuvdcxiar/site/*",
+                "arn:aws:s3:::ecoraee-storage-frontend-xzgeuvdcxiar/deployment/*"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "Publisher": {
+      "Value": {
+        "Ref": "DeployUser"
+      }
+    },
+    "Reviewer": {
+      "Value": {
+        "Ref": "ReviewUser"
+      }
+    }
+  }
+}

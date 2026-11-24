@@ -1,0 +1,25 @@
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.venv/
+backend/data/
+backend/uploads/
+backend/media/
+/backups/
+*.log
+.env
+.env.*
+!.env.example
+
+# Datos privados y archivos generados localmente.
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+/tmp/
+
+# Material de estudio y documentación conservados únicamente en esta computadora.
+/entregables_sqlserver/
+/Screenshot*.png
+/CanchaLibre-arquitectura-AWS*.png

@@ -1,0 +1,166 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "EcoRAEE HTTPS frontend and private API origin",
+  "Parameters": {
+    "FrontendBucket": {
+      "Type": "String"
+    },
+    "InstanceOriginArn": {
+      "Type": "String"
+    },
+    "InstanceDns": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "S3Access": {
+      "Type": "AWS::CloudFront::OriginAccessControl",
+      "Properties": {
+        "OriginAccessControlConfig": {
+          "Name": "ecoraee-demo-s3",
+          "OriginAccessControlOriginType": "s3",
+          "SigningBehavior": "always",
+          "SigningProtocol": "sigv4"
+        }
+      }
+    },
+    "PrivateApi": {
+      "Type": "AWS::CloudFront::VpcOrigin",
+      "Properties": {
+        "VpcOriginEndpointConfig": {
+          "Name": "ecoraee-demo-api",
+          "Arn": {
+            "Ref": "InstanceOriginArn"
+          },
+          "HTTPPort": 8000,
+          "HTTPSPort": 443,
+          "OriginProtocolPolicy": "http-only",
+          "OriginSSLProtocols": [
+            "TLSv1.2"
+          ]
+        }
+      }
+    },
+    "Site": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "Enabled": true,
+          "Comment": "EcoRAEE demonstration",
+          "DefaultRootObject": "index.html",
+          "PriceClass": "PriceClass_100",
+          "Origins": [
+            {
+              "Id": "frontend",
+              "DomainName": {
+                "Fn::Sub": "${FrontendBucket}.s3.${AWS::Region}.${AWS::URLSuffix}"
+              },
+              "OriginPath": "/site",
+              "OriginAccessControlId": {
+                "Fn::GetAtt": [
+                  "S3Access",
+                  "Id"
+                ]
+              },
+              "S3OriginConfig": {
+                "OriginAccessIdentity": ""
+              }
+            },
+            {
+              "Id": "api",
+              "DomainName": {
+                "Ref": "InstanceDns"
+              },
+              "VpcOriginConfig": {
+                "VpcOriginId": {
+                  "Fn::GetAtt": [
+                    "PrivateApi",
+                    "Id"
+                  ]
+                }
+              }
+            }
+          ],
+          "DefaultCacheBehavior": {
+            "TargetOriginId": "frontend",
+            "ViewerProtocolPolicy": "redirect-to-https",
+            "AllowedMethods": [
+              "GET",
+              "HEAD"
+            ],
+            "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+            "Compress": true
+          },
+          "CacheBehaviors": [
+            {
+              "PathPattern": "/api/*",
+              "TargetOriginId": "api",
+              "ViewerProtocolPolicy": "https-only",
+              "AllowedMethods": [
+                "GET",
+                "HEAD",
+                "OPTIONS",
+                "PUT",
+                "PATCH",
+                "POST",
+                "DELETE"
+              ],
+              "CachedMethods": [
+                "GET",
+                "HEAD"
+              ],
+              "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+              "OriginRequestPolicyId": "216adef6-5c7f-47e4-b989-5492eafa07d3"
+            },
+            {
+              "PathPattern": "/uploads/*",
+              "TargetOriginId": "api",
+              "ViewerProtocolPolicy": "https-only",
+              "AllowedMethods": [
+                "GET",
+                "HEAD",
+                "OPTIONS",
+                "PUT",
+                "PATCH",
+                "POST",
+                "DELETE"
+              ],
+              "CachedMethods": [
+                "GET",
+                "HEAD"
+              ],
+              "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+              "OriginRequestPolicyId": "216adef6-5c7f-47e4-b989-5492eafa07d3"
+            }
+          ],
+          "ViewerCertificate": {
+            "CloudFrontDefaultCertificate": true
+          }
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "DistributionId": {
+      "Value": {
+        "Ref": "Site"
+      }
+    },
+    "SiteUrl": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Fn::GetAtt": [
+                "Site",
+                "DomainName"
+              ]
+            }
+          ]
+        ]
+      }
+    }
+  }
+}
